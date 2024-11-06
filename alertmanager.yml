@@ -1,0 +1,18 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: 'default'
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 3h
+
+receivers:
+  - name: 'default'
+    email_configs:
+      - to: 'ataakdemir123@gmail.com'
+        from: 'ataakdemir123@gmail.com'
+        smarthost: 'smtp.gmail.com:587'
+        auth_username: 'ataakdemir123@gmail.com'
+        auth_password: 'fbri cjmt docl allg'
+        send_resolved: true

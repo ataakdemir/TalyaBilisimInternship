@@ -1,0 +1,48 @@
+# OS generated files #
+######################
+.DS_Store
+Thumbs.db
+
+# Logs and databases #
+######################
+*.log
+*.db
+*.sqlite
+
+# Prometheus data #
+##################
+prometheus/data/
+prometheus/tsdb/*
+
+# Grafana data and plugins #
+###########################
+grafana/data/
+grafana/plugins/
+
+# Windows Exporter #
+###################
+windows_exporter/
+windows_exporter/*.exe
+windows_exporter/*.log
+
+# Docker and Containers #
+#########################
+docker-compose.override.yml
+.env
+.dockerignore
+*.pid
+*.sock
+
+# Node.js (if applicable) #
+###########################
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python (if applicable) #
+###########################
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

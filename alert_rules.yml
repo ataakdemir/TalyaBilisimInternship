@@ -1,0 +1,57 @@
+groups:
+  - name: memory_alerts
+    rules:
+      - alert: HighMemoryUsage
+        expr: 100 * (1 - (windows_memory_available_bytes / windows_cs_physical_memory_bytes)) > 63
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High Memory Usage"
+          description: "Memory usage is above 63% for more than 1 minute."
+      - alert: HighDiskWriteRate
+        expr: rate(windows_logical_disk_write_bytes_total{instance="localhost:9182"}[1m]) > 2 * rate(windows_logical_disk_write_bytes_total{instance="localhost:9182"}[5m])
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High Disk Write Rate"
+          description: "Disk write rate is more than double the average over the last 1 minutes."
+      - alert: HighCpuUsage
+        expr: (100 - (avg by (instance) (rate(windows_cpu_time_total{mode="idle"}[1m])) * 100)) > (100 - (avg by (instance) (rate(windows_cpu_time_total{mode="idle"}[5m])) * 100))
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High CPU Usage"
+          description: "CPU usage is more than the average over the last 1 minutes."
+      - alert: HighDiskReadRate
+        expr: rate(windows_logical_disk_read_bytes_total{instance="localhost:9182"}[1m]) > 2 * rate(windows_logical_disk_read_bytes_total{instance="localhost:9182"}[5m])
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High Disk Read Rate"
+          description: "Disk read rate is more than double the average over the last 1 minutes."
+  - name: network_alerts
+    rules:
+      - record: daily_avg_network_traffic_received
+        expr: avg_over_time(rate(windows_net_bytes_received_total{instance="localhost:9182"}[1m])[1d:])
+      - alert: AnomalousDailyNetworkTrafficReceived
+        expr: rate(windows_net_bytes_received_total{instance="localhost:9182"}[1m]) > 1.5 * daily_avg_network_traffic_received
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Anomalous Daily Network Traffic"
+          description: "Network traffic is more than 1.5 times the daily average on instance {{ $labels.instance }}."
+      - record: daily_avg_network_traffic_sent
+        expr: avg_over_time(rate(windows_net_bytes_sent_total{instance="localhost:9182"}[1m])[1d:])
+      - alert: AnomalousDailyNetworkTrafficSent
+        expr: rate(windows_net_bytes_sent_total{instance="localhost:9182"}[1m]) > 1.5 * daily_avg_network_traffic_sent
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Anomalous Daily Network Traffic"
+          description: "Network traffic is more than 1.5 times the daily average on instance {{ $labels.instance }}."

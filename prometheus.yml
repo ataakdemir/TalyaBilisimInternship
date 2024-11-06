@@ -1,0 +1,30 @@
+# my global config
+global:
+  scrape_interval: 15s # Her 15 saniyede bir kazıma aralığını ayarlar. Varsayılanı her 1 dakikadır.
+  evaluation_interval: 15s # Kuralları her 15 saniyede bir değerlendirir. Varsayılanı her 1 dakikadır.
+  # scrape_timeout, küresel varsayılan olarak ayarlanmıştır (10 saniye).
+
+# Alertmanager yapılandırması
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - 'localhost:9093'
+          
+
+# Kuralları bir kez yükleyin ve küresel 'evaluation_interval' değerine göre periyodik olarak değerlendirin.
+rule_files:
+  - "alert_rules.yml"  # Buraya uyarı kurallarını içeren dosyanızı ekleyin.
+
+# Kazıma yapılandırması, tam olarak kazıyacak bir ucu içeren:
+# Burada Prometheus kendisidir.
+scrape_configs:
+  # Prometheus'un kendi metrikleri için iş tanımı
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9091"]
+
+  # Windows Exporter için iş tanımı
+  - job_name: "windows"
+    static_configs:
+      - targets: ["localhost:9182"]  # Windows Exporter'ın dinlediği port (varsayılan olarak 9182)
